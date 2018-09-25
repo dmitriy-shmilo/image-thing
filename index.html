@@ -21,7 +21,7 @@
 		<div class="row py-1">
 			<div  style="margin: 0 auto;">
 				<a class="btn btn-primary" href="#" id="save-button" >Save</a>
-				<a id="link" style="display: hidden"></a>
+				<a id="link" target="_blank"></a>
 			</div>
 		</div>
 		<div class="row py-3">
@@ -189,13 +189,13 @@
 		});
 
 		saveButton.addEventListener("click", function () {
-			var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-			window.location.href=image;
+			//var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+			//window.location.href=image;
 
-			/*var link = document.getElementById('link');
+			var link = document.getElementById('link');
 		  	link.setAttribute('download', fileName);
 		  	link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-		  	link.click();*/
+		  	link.click();
 		});
 		
 	</script>
