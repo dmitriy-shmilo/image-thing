@@ -140,6 +140,7 @@
 
 	canvas.addEventListener("mousemove", (e) => {
 		if(dragging) {
+			e.preventDefault();
 			context.textX = e.offsetX;
 			context.textY = e.offsetY;
 		}
