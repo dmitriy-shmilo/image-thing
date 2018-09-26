@@ -216,6 +216,9 @@
 			context.backgroundColor = color.rgbaString;
 		}
 	});
+	colorInput.addEventListener("click", e => { 
+		e.preventDefault(); 
+	});
 
 	new Binding(context, "backgroundColor")
 		.observe(render)
