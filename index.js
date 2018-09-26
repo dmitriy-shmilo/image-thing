@@ -18,7 +18,6 @@
 	var overlayInput = document.getElementById("overlay-input");
 	var textInput = document.getElementById("text-input");
 	var textSizeInput = document.getElementById("text-size-input");
-	var textColorInput = document.getElementById("text-color-input");
 	var textOpacityInput = document.getElementById("text-opacity-input");
 	var saveButton = document.getElementById("save-button");
 	var lightbox = document.getElementById("lightbox");
@@ -45,12 +44,12 @@
 		var height = textHeight;
 		var text = context.text;
 
-		maskCtx.fillStyle = "#fff";
+		maskCtx.fillStyle = "#ffffff";
 		maskCtx.font = fontSize + "px sans-serif";
 		maskCtx.fillRect(0, 0, width, height);
 
 		var textSize = maskCtx.measureText(text);
-		maskCtx.fillStyle = "#000";
+		maskCtx.fillStyle = "#000000";
 		maskCtx.fillText(text,
 			width / 2 - textSize.width / 2,
 			height / 2 + fontSize /2);
@@ -66,6 +65,7 @@
 
 		var textSize = maskCtx.measureText(text);
 		textCtx.font = fontSize + "px sans-serif";
+		textCtx.clearRect(0, 0, textWidth, textHeight);
 
 		textCtx.fillStyle = context.textHighlightColor;
 		textCtx.fillText(text,
@@ -76,9 +76,10 @@
 			width / 2 - textSize.width / 2 + 1,
 			height / 2 + fontSize / 2 + 1);
 
+		var tmp = maskCtx.globalCompositeOperation;
 		maskCtx.globalCompositeOperation = "source-in";
-		maskCtx.globalAlpha = context.textOpacity;
 		maskCtx.drawImage(textCanvas, 0, 0);
+		maskCtx.globalCompositeOperation = tmp;
 	}
 
 	function renderBackground() {
@@ -111,8 +112,11 @@
 	}
 
 	function renderWatermark() {
-		ctx.drawImage(maskCanvas, context.textX - textWidth / 2,
-		 context.textY - textHeight / 2);
+		ctx.globalAlpha = parseFloat(context.textOpacity);
+		ctx.drawImage(maskCanvas, 
+			context.textX - textWidth / 2,
+		 	context.textY - textHeight / 2);
+		ctx.globalAlpha = 1;
 	}
 
 	function render() {
@@ -197,12 +201,6 @@
 			render();
 		});
 		
-	new Binding(context, "textColor")
-		.bindDOM(textColorInput, "value", "input")
-		.observe(() => {
-			prepareWatermark();
-			render();
-		});
 		
 	new Binding(context, "textOpacity")
 		.bindDOM(textOpacityInput, "value", "input")
