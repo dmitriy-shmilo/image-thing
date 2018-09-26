@@ -138,6 +138,14 @@
 		dragging = true;
 	});
 
+	canvas.addEventListener("touchmove", (e) => {
+		if(dragging) {
+			e.preventDefault();
+		}
+	}, {
+		passive: false
+	});
+
 	canvas.addEventListener("mousemove", (e) => {
 		if(dragging) {
 			e.preventDefault();
