@@ -17,19 +17,13 @@
 		</div>
 		<div class="row py-1">
 			<div class="col-6">
-				<label>
-					Image:
-					<input type="file" id="file-input" class="form-control">
+				<label class="btn btn-secondary">
+						Image
+						<input type="file" id="file-input" class="form-control">
 				</label>
-
-				<label>
-					Background Color:
-					<input id="back-color-input" 
-							type="color"
-							placeholder="Background Color"
-							value="#dad3b6"
-							class="form-control my-1"/>
-				</label>
+				<a href="#" id="back-color-input" class="btn btn-secondary">
+					Background
+				</a>
 			</div>
 			<div class="col-6">
 				<label>
@@ -78,6 +72,7 @@
 		</div>
 	</div>
 	
+	<script src="https://unpkg.com/vanilla-picker@2"></script>
 	<script src="binding.js"></script>
 	<script src="index.js"></script>
 </body>

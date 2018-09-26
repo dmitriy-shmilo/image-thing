@@ -37,3 +37,11 @@ canvas {
 	display: block;
 	width: 200px;
 }
+
+input[type="file"] {
+	display: none;
+}
+
+label {
+	margin: 0;
+}

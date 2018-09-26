@@ -41,7 +41,19 @@ function Binding(obj, prop) {
 
     self.observe = function(callback) {
         self.observers.push(callback);
+        return self;
     }
+
+    self.store = function () {
+        if(localStorage.getItem(prop)) {
+            valueSetter(localStorage.getItem(prop));
+        }
+
+        self.observe(function () {
+            localStorage.setItem(prop, valueGetter());
+        });
+        return self;
+    };
 
     Object.defineProperty(obj, prop, {
         get: valueGetter,

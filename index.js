@@ -33,8 +33,8 @@
 		textHighlightColor: "#ffffff",
 		textShadowColor: "#000000",
 		textOpacity: 1,
-		textX: canvasWidth / 2,
-		textY: canvasHeight / 2,
+		textX: .5,
+		textY: .5,
 		textSize: 30
 	};
 
@@ -114,8 +114,8 @@
 	function renderWatermark() {
 		ctx.globalAlpha = parseFloat(context.textOpacity);
 		ctx.drawImage(maskCanvas, 
-			context.textX - textWidth / 2,
-		 	context.textY - textHeight / 2);
+			context.textX * canvasWidth - textWidth / 2,
+		 	context.textY * canvasHeight - textHeight / 2);
 		ctx.globalAlpha = 1;
 	}
 
@@ -125,16 +125,13 @@
 		renderWatermark();
 	}
 
-	function onCanvasGesture(e) {
-		context.textX = e.offsetX;
-		context.textY = e.offsetY;
-	}
-
 	new Binding(context, "textX")
-		.observe(render);
+		.observe(render)
+		.store();
 
 	new Binding(context, "textY")
-		.observe(render);
+		.observe(render)
+		.store();
 
 	var dragging = false;
 	var dragStartEvent = "mousedown";
@@ -156,11 +153,11 @@
 		if(dragging) {
 			var offset = e.target.getBoundingClientRect();
 			if(isTouch) {
-				context.textX = e.touches[0].clientX - offset.left;
-				context.textY = e.touches[0].clientY - offset.top;
+				context.textX = (e.touches[0].clientX - offset.left) / canvasWidth;
+				context.textY = (e.touches[0].clientY - offset.top) / canvasHeight;
 			} else {
-				context.textX = e.clientX - offset.left;
-				context.textY = e.clientY - offset.top;
+				context.textX = (e.clientX - offset.left) / canvasWidth;
+				context.textY = (e.clientY - offset.top) / canvasHeight;
 			}
 			e.preventDefault();
 			e.stopPropagation();
@@ -177,7 +174,6 @@
 		img.src = URL.createObjectURL(e.target.files[0]);
 	});
 
-
 	closeButton.addEventListener("click", function () {
 		lightbox.style.display = "none";
 	});
@@ -192,14 +188,16 @@
 		.observe(() => {
 			prepareWatermark();
 			render();
-		});
+		})
+		.store();
 		
 	new Binding(context, "textSize")
 		.bindDOM(textSizeInput, "value", "input")
 		.observe(() => {
 			prepareWatermark();
 			render();
-		});
+		})
+		.store();
 		
 		
 	new Binding(context, "textOpacity")
@@ -207,11 +205,21 @@
 		.observe(() => {
 			prepareWatermark();
 			render();
-		});
+		})
+		.store();
+
+	new Picker({
+		parent: colorInput,
+		color: context.backgroundColor,
+		popup: "top",
+		onDone: function(color) {
+			context.backgroundColor = color.rgbaString;
+		}
+	});
 
 	new Binding(context, "backgroundColor")
-		.bindDOM(colorInput, "value", "input")
-		.observe(render);
+		.observe(render)
+		.store();
 
 	prepareWatermark();
 	render();
