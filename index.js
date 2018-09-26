@@ -211,8 +211,8 @@
 	new Picker({
 		parent: colorInput,
 		color: context.backgroundColor,
-		popup: "top",
-		onDone: function(color) {
+		popup: false,
+		onChange: function(color) {
 			context.backgroundColor = color.rgbaString;
 		}
 	});
