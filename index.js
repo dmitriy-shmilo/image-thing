@@ -133,22 +133,37 @@
 		.observe(render);
 
 	var dragging = false;
+	var dragStartEvent = "mousedown";
+	var dragMoveEvent = "mousemove";
+	var dragEndEvent = "mouseup";
+	var isTouch = "ontouchstart" in document.documentElement;
 
-	canvas.addEventListener("touchstart", () => {
+	if(isTouch) {
+		dragStartEvent = "touchstart";
+		dragMoveEvent = "touchmove";
+		dragEndEvent = "touchend";
+	}
+
+	canvas.addEventListener(dragStartEvent, () => {
 		dragging = true;
 	}, false);
 
-	canvas.addEventListener("touchmove", (e) => {
+	canvas.addEventListener(dragMoveEvent, (e) => {
 		if(dragging) {
 			var offset = e.target.getBoundingClientRect();
-			context.textX = e.touches[0].pageX - offset.left;
-			context.textY = e.touches[0].pageY - offset.top;
+			if(isTouch) {
+				context.textX = e.touches[0].clientX - offset.left;
+				context.textY = e.touches[0].clientY - offset.top;
+			} else {
+				context.textX = e.clientX - offset.left;
+				context.textY = e.clientY - offset.top;
+			}
 			e.preventDefault();
 			e.stopPropagation();
 		}
 	}, false);
 
-	canvas.addEventListener("touchend", () => {
+	canvas.addEventListener(dragEndEvent, () => {
 		dragging = false;
 	}, false);
 
