@@ -132,7 +132,22 @@
 	new Binding(context, "textY")
 		.observe(render);
 
-	canvas.addEventListener("click", onCanvasGesture);
+	var dragging = false;
+
+	canvas.addEventListener("mousedown", () => {
+		dragging = true;
+	});
+
+	canvas.addEventListener("mousemove", (e) => {
+		if(dragging) {
+			context.textX = e.offsetX;
+			context.textY = e.offsetY;
+		}
+	});
+
+	canvas.addEventListener("mouseup", () => {
+		dragging = false;
+	});
 
 	imageInput.addEventListener("change", function(e) {			
 		img.onload = render;
