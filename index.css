@@ -1,0 +1,39 @@
+
+body {
+	background: #f3f3f3;
+}
+canvas {
+	display: none;
+}
+
+#canvas {
+	display: block;
+	margin: 0 auto;
+	border: 1px solid gray;
+	width:640px;
+	height: 640px;
+}
+
+#lightbox {
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: black;
+	z-index: 1;
+	display: none;
+}
+
+#lightbox > img {
+	margin: 10px auto;
+	width: 640px;
+	height: 640px;
+	display: block;
+}
+
+#lightbox > a.btn {
+	margin: 10px auto;
+	display: block;
+	width: 200px;
+}
