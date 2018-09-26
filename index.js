@@ -140,9 +140,9 @@
 
 	canvas.addEventListener("touchmove", (e) => {
 		if(dragging) {
-
-			context.textX = e.offsetX;
-			context.textY = e.offsetY;
+			var offset = e.target.getBoundingClientRect();
+			context.textX = e.touches[0].pageX - offset.left;
+			context.textY = e.touches[0].pageY - offset.top;
 			e.preventDefault();
 			e.stopPropagation();
 		}
