@@ -134,31 +134,23 @@
 
 	var dragging = false;
 
-	canvas.addEventListener("mousedown", () => {
+	canvas.addEventListener("touchstart", () => {
 		dragging = true;
-	});
+	}, false);
 
 	canvas.addEventListener("touchmove", (e) => {
 		if(dragging) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}, {
-		passive: false
-	});
 
-	canvas.addEventListener("mousemove", (e) => {
-		if(dragging) {
-			e.preventDefault();
-			e.stopPropagation();
 			context.textX = e.offsetX;
 			context.textY = e.offsetY;
+			e.preventDefault();
+			e.stopPropagation();
 		}
-	});
+	}, false);
 
-	canvas.addEventListener("mouseup", () => {
+	canvas.addEventListener("touchend", () => {
 		dragging = false;
-	});
+	}, false);
 
 	imageInput.addEventListener("change", function(e) {			
 		img.onload = render;
