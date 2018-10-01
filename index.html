@@ -11,21 +11,25 @@
 		<a class="btn btn-primary" href="#" id="close-button">Back</a>
 	</div>
 	<div class="container">		
-		<div class="row py-3">
-			<canvas id="canvas" width="640" height="640">				
-			</canvas>
-		</div>
-		<div class="row py-1">
-			<div class="col-6">
-				<label class="btn btn-secondary">
+		<div class="row">
+			<div class="col-12 col-lg-8 py-3">
+				<canvas id="canvas" width="1024" height="1024">				
+				</canvas>
+			</div>
+			<div class="col-12 col-lg-4 py-3" style="padding-left: 10px">
+				<label class="btn btn-secondary my-1">
 						Image
 						<input type="file" id="file-input" class="form-control">
 				</label>
-				<div id="back-color-input" style="display: table">
-					Background
+				<div class="btn-group btn-group-toggle">
+				  <label class="btn btn-light active">
+				    <input type="radio" name="options" id="contain-option" autocomplete="off" checked> Contain
+				  </label>
+				  <label class="btn btn-light">
+				    <input type="radio" name="options" id="cover-option" autocomplete="off"> Cover
+				  </label>
 				</div>
-			</div>
-			<div class="col-6">
+
 				<label>
 					Watermark:
 				<input id="text-input" 
@@ -54,7 +58,24 @@
 							step="0.1"
 							class="form-control my-1"/>
 				</label>
-			</div>	
+
+				<label>
+					Padding:
+					<input id="padding-input" 
+							type="number"
+							value="10"
+							class="form-control my-1"/>
+				</label>
+				
+
+				<div id="back-color-input" style="display: table">
+					Background
+				</div>
+			</div>
+		</div>
+		<div class="row py-1">
+			
+			
 		</div>
 		<div class="row py-1">
 			<div style="margin: 0 auto;">

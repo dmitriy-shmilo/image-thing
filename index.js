@@ -8,8 +8,8 @@
 	var maskCanvas = document.getElementById('text-mask-canvas');
 	var maskCtx = maskCanvas.getContext('2d');
 
-	var canvasWidth = 640;
-	var canvasHeight = 640;
+	var canvasWidth = 1024;
+	var canvasHeight = 1024;
 	var textWidth = 400;
 	var textHeight = 200;
 
@@ -23,6 +23,9 @@
 	var lightbox = document.getElementById("lightbox");
 	var closeButton = document.getElementById("close-button");
 	var result = document.getElementById("result");
+	var coverInput = document.getElementById("cover-option");
+	var containInput = document.getElementById("contain-option");
+	var paddingInput = document.getElementById("padding-input");
 
 	var img = new Image();
 
@@ -35,7 +38,9 @@
 		textOpacity: 1,
 		textX: .5,
 		textY: .5,
-		textSize: 30
+		textSize: 30,
+		padding: 10,
+		fillType: "contain"
 	};
 
 	function prepareWatermark() {	
@@ -88,15 +93,16 @@
 	}
 
 	function renderImage() {
-		var vPad = 32;
-		var hPad = 32;
+		var vPad = context.padding;
+		var hPad = context.padding;
 		var dstWidth = canvasWidth - hPad * 2;
 		var dstHeight = canvasHeight - vPad * 2;
 		var srcRatio = img.width / img.height;
 		var dstRatio = dstWidth / dstHeight;
 
 	    var scaleFactor;
-	    if (srcRatio < dstRatio)
+	    if (srcRatio < dstRatio && context.fillType === "contain"
+	    	|| srcRatio > dstRatio && context.fillType === "cover")
 	        scaleFactor = dstHeight / img.height;
 	    else
 	        scaleFactor = dstWidth / img.width;
@@ -112,7 +118,7 @@
 	}
 
 	function renderWatermark() {
-		ctx.globalAlpha = parseFloat(context.textOpacity);
+		ctx.globalAlpha = context.textOpacity;
 		ctx.drawImage(maskCanvas, 
 			context.textX * canvasWidth - textWidth / 2,
 		 	context.textY * canvasHeight - textHeight / 2);
@@ -145,26 +151,26 @@
 		dragEndEvent = "touchend";
 	}
 
-	canvas.addEventListener(dragStartEvent, () => {
+	canvas.addEventListener(dragStartEvent, function() {
 		dragging = true;
 	}, false);
 
-	canvas.addEventListener(dragMoveEvent, (e) => {
+	canvas.addEventListener(dragMoveEvent, function(e) {
 		if(dragging) {
 			var offset = e.target.getBoundingClientRect();
 			if(isTouch) {
-				context.textX = (e.touches[0].clientX - offset.left) / canvasWidth;
-				context.textY = (e.touches[0].clientY - offset.top) / canvasHeight;
+				context.textX = (e.touches[0].clientX - offset.left) / offset.width;
+				context.textY = (e.touches[0].clientY - offset.top) / offset.height;
 			} else {
-				context.textX = (e.clientX - offset.left) / canvasWidth;
-				context.textY = (e.clientY - offset.top) / canvasHeight;
+				context.textX = (e.clientX - offset.left) / offset.width;
+				context.textY = (e.clientY - offset.top) / offset.height;
 			}
 			e.preventDefault();
 			e.stopPropagation();
 		}
 	}, false);
 
-	canvas.addEventListener(dragEndEvent, () => {
+	canvas.addEventListener(dragEndEvent, function() {
 		dragging = false;
 	}, false);
 
@@ -185,24 +191,46 @@
 
 	new Binding(context, "text")
 		.bindDOM(textInput, "value", "input")
-		.observe(() => {
+		.observe(function() {
 			prepareWatermark();
 			render();
 		})
 		.store();
+
+	containInput.addEventListener("change", function() {
+		context.fillType = "contain";
+	});
+
+	coverInput.addEventListener("change", function() {
+		context.fillType = "cover";
+	});
+	new Binding(context, "fillType")
+		.observe(function() {
+			if(context.fillType == "contain") {
+				containInput.parentElement.classList.add("active");
+				coverInput.parentElement.classList.remove("active");
+				containInput.checked = true;
+			} else if(context.fillType == "cover") {
+				coverInput.parentElement.classList.add("active");
+				containInput.parentElement.classList.remove("active");
+				coverInput.checked = true;
+			}
+			render();
+		})
+		.store();
 		
-	new Binding(context, "textSize")
+	new Binding(context, "textSize", "number")
 		.bindDOM(textSizeInput, "value", "input")
-		.observe(() => {
+		.observe(function() {
 			prepareWatermark();
 			render();
 		})
 		.store();
 		
 		
-	new Binding(context, "textOpacity")
+	new Binding(context, "textOpacity", "number")
 		.bindDOM(textOpacityInput, "value", "input")
-		.observe(() => {
+		.observe(function() {
 			prepareWatermark();
 			render();
 		})
@@ -216,11 +244,17 @@
 			context.backgroundColor = color.rgbaString;
 		}
 	});
-	colorInput.addEventListener("click", e => { 
+
+	colorInput.addEventListener("click", function(e) { 
 		e.preventDefault(); 
 	});
 
 	new Binding(context, "backgroundColor")
+		.observe(render)
+		.store();
+
+	new Binding(context, "padding", "number")
+		.bindDOM(paddingInput, "value", "input")
 		.observe(render)
 		.store();
 
