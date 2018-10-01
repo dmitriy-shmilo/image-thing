@@ -1,14 +1,18 @@
-function Binding(obj, prop) {
+function Binding(obj, prop, type) {
     var self = this;
     self.elementBindings = [];
     self.observers = [];
     self.value = obj[prop];
-    
+    self.isNumber = type === "number";
+
     function valueGetter() {
         return self.value;
     }
 
-    function valueSetter(val) {
+    function valueSetter(val) {                
+        if(self.isNumber) {
+            val = parseFloat(val);
+        }
         self.value = val
         for (var i = 0; i < self.elementBindings.length; i++) {
             var binding = self.elementBindings[i];
@@ -24,17 +28,12 @@ function Binding(obj, prop) {
     self.bindDOM = function(element, attribute, event) {
         var binding = {
             element: element,
-            attribute: attribute,
-            isNumber: element.type === "number"
+            attribute: attribute
         };
 
         if (event){
             element.addEventListener(event, function(event) {
-                var value = element[attribute];
-                if(binding.isNumber) {
-                    value = parseFloat(value);
-                }
-                valueSetter(value);
+                valueSetter(element[attribute]);
             })
             binding.event = event
         }
