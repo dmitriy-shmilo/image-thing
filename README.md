@@ -1,0 +1,1 @@
+This is a simple image trimmer with an ability to add a watermark. Please, don't look into the sources: I quickly slapped this page together just so it works, this is not how I usually write my code.
