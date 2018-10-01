@@ -24,12 +24,17 @@ function Binding(obj, prop) {
     self.bindDOM = function(element, attribute, event) {
         var binding = {
             element: element,
-            attribute: attribute
+            attribute: attribute,
+            isNumber: element.type === "number"
         };
 
         if (event){
             element.addEventListener(event, function(event) {
-                valueSetter(element[attribute]);
+                var value = element[attribute];
+                if(binding.isNumber) {
+                    value = parseFloat(value);
+                }
+                valueSetter(value);
             })
             binding.event = event
         }
