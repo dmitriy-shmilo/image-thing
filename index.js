@@ -10,8 +10,8 @@
 
 	var canvasWidth = 1024;
 	var canvasHeight = 1024;
-	var textWidth = 400;
-	var textHeight = 200;
+	var textWidth = 1024;
+	var textHeight = 1024;
 
 	var imageInput = document.getElementById("file-input");
 	var colorInput = document.getElementById("back-color-input");
