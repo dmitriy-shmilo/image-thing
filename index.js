@@ -89,11 +89,6 @@
 		maskCtx.globalCompositeOperation = tmp;
 	}
 
-	function renderBackground() {
-		ctx.fillStyle = context.backgroundColor;
-		ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-	}
-
 	function renderImage() {
 		var srcRatio = img.width / img.height;
 
@@ -112,6 +107,8 @@
 		canvas.width = canvasWidth;
 		canvas.height = canvasHeight;
 
+		ctx.fillStyle = context.backgroundColor;
+		ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 		var vPad = context.padding;
 		var hPad = context.padding;
@@ -146,7 +143,6 @@
 	}
 
 	function render() {
-		renderBackground();
 		renderImage();			
 		renderWatermark();
 	}
@@ -219,14 +215,17 @@
 
 	containInput.addEventListener("change", function() {
 		context.fillType = "contain";
+		context.padding = 10;
 	});
 
 	coverInput.addEventListener("change", function() {
 		context.fillType = "cover";
+		context.padding = 0;
 	});
 
 	preserveInput.addEventListener("change", function() {
 		context.fillType = "preserve";
+		context.padding = 0;
 	});
 
 	new Binding(context, "fillType")
