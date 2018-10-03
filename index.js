@@ -8,8 +8,9 @@
 	var maskCanvas = document.getElementById('text-mask-canvas');
 	var maskCtx = maskCanvas.getContext('2d');
 
-	var canvasWidth = 1024;
-	var canvasHeight = 1024;
+	var defaultCanvasSize = 1024;
+	var canvasWidth = defaultCanvasSize;
+	var canvasHeight = defaultCanvasSize;
 	var textWidth = 1024;
 	var textHeight = 1024;
 
@@ -25,6 +26,7 @@
 	var result = document.getElementById("result");
 	var coverInput = document.getElementById("cover-option");
 	var containInput = document.getElementById("contain-option");
+	var preserveInput = document.getElementById("preserve-option");
 	var paddingInput = document.getElementById("padding-input");
 
 	var img = new Image();
@@ -93,11 +95,29 @@
 	}
 
 	function renderImage() {
+		var srcRatio = img.width / img.height;
+
+		if(context.fillType !== "preserve" || !img.width || !img.height) {
+			canvasWidth = canvasHeight = defaultCanvasSize;
+		} else {
+			if(srcRatio < 1) {
+				canvasHeight = defaultCanvasSize;
+				canvasWidth = canvasHeight * srcRatio;
+			} else {
+				canvasWidth = defaultCanvasSize;
+				canvasHeight = canvasWidth / srcRatio;
+			}
+		}
+
+		canvas.width = canvasWidth;
+		canvas.height = canvasHeight;
+
+
 		var vPad = context.padding;
 		var hPad = context.padding;
 		var dstWidth = canvasWidth - hPad * 2;
 		var dstHeight = canvasHeight - vPad * 2;
-		var srcRatio = img.width / img.height;
+		
 		var dstRatio = dstWidth / dstHeight;
 
 	    var scaleFactor;
@@ -204,16 +224,28 @@
 	coverInput.addEventListener("change", function() {
 		context.fillType = "cover";
 	});
+
+	preserveInput.addEventListener("change", function() {
+		context.fillType = "preserve";
+	});
+
 	new Binding(context, "fillType")
 		.observe(function() {
 			if(context.fillType == "contain") {
 				containInput.parentElement.classList.add("active");
 				coverInput.parentElement.classList.remove("active");
+				preserveInput.parentElement.classList.remove("active");
 				containInput.checked = true;
 			} else if(context.fillType == "cover") {
 				coverInput.parentElement.classList.add("active");
 				containInput.parentElement.classList.remove("active");
+				preserveInput.parentElement.classList.remove("active");
 				coverInput.checked = true;
+			} else if(context.fillType == "preserve") {
+				coverInput.parentElement.classList.remove("active");
+				containInput.parentElement.classList.remove("active");
+				preserveInput.parentElement.classList.add("active");
+				preserveInput.checked = true;
 			}
 			render();
 		})
