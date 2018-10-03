@@ -20,14 +20,14 @@ canvas {
 	left: 0;
 	right: 0;
 	background: black;
-	z-index: 1;
+	z-index: 2;
 	display: none;
 }
 
 #lightbox > img {
 	margin: 10px auto;
-	width: 640px;
-	height: 640px;
+	max-width: 640px;
+	max-height: 640px;
 	display: block;
 }
 
